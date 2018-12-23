@@ -1,0 +1,7 @@
+FROM golang:1.10.3 as builder
+WORKDIR /go/src/dafit-server
+COPY . /go/src/dafit-server
+RUN go get -d ./...
+RUN go build
+CMD ./dafit-server
+EXPOSE 8080
