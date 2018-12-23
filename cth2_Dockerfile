@@ -1,0 +1,32 @@
+FROM python:3.5.2
+
+# Rituals
+ENV PYTHONUNBUFFERED 1
+
+RUN mkdir /app
+
+#separate this so it can be cached
+COPY requirements-new.txt /app
+COPY lib_misc/couchbase.sh /app
+WORKDIR /app
+RUN bash /app/couchbase.sh
+RUN pip install -r /app/requirements-new.txt
+WORKDIR /usr/local/lib/python3.5/site-packages/HttpLibrary
+RUN rm __init__.py
+RUN rm livetest.py
+COPY lib_misc/__init__.py /usr/local/lib/python3.5/site-packages/HttpLibrary
+COPY lib_misc/livetest.py /usr/local/lib/python3.5/site-packages/HttpLibrary
+
+COPY . /app
+
+WORKDIR /app/backend-system/test_cases
+
+# Timezone
+ENV TZ=Asia/Jakarta
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+COPY entrypoint.sh /
+RUN sed -i 's/\r//' /entrypoint.sh \
+  && chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["--outputdir", "../results", "--variable", "project_key:DEMO", "--variable", "issue_key:DEMO", "--variable", "username:Docker", "backend-testcases.robot"]
