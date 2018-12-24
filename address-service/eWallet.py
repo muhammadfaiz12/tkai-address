@@ -109,7 +109,7 @@ def addAddress():
         print(e)
         return jsonify({"status": -10})
 
-@app.route('/address', methods=["DELETE"])
+@app.route('/delete-address', methods=["POST"])
 def deleteAddress():
     try:
         data = request.json
