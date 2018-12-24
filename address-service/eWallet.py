@@ -5,6 +5,7 @@ import sys
 
 from flask import Flask, request, jsonify, Blueprint
 from functools import wraps
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import exc
 from config import Config, quorum, init_quorum
@@ -21,6 +22,7 @@ from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
 app = Flask(__name__)
+CORS(app)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
