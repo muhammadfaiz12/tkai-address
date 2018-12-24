@@ -80,7 +80,7 @@ def getAddress():
         accounts = Account.query.all()
         res = []
         for x in accounts:
-            row = {"address_id":x.address_id, "user_id":x.user_id, "address":x.address}
+            row = {"address_id":x.address_id, "user_id":x.user_id, "address":x.address, "edit":False}
             res.append(row)
         if not accounts:
             return jsonify({"status": -2, "message":"User record none Failed"})
